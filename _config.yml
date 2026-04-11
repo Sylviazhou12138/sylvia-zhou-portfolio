@@ -1,0 +1,72 @@
+### Site Settings ###
+title               : Sylvia Zhou | Portfolio
+description         : >-
+                      Master's student at UIUC specializing in Information Management. 
+                      Passionate about bridging the gap between complex data, AI technologies, and intuitive user experiences.
+baseurl             : ""
+repository          : sylviazhou/sylviazhou.github.io
+open_new_tab        : true
+
+### Plugins ###
+plugins:
+  - jekyll-archives
+  - jekyll-sitemap
+  - jekyll-paginate-v2
+
+port: 4008
+
+### Navbar Settings ###
+nav_exclude:
+  - pages/tags.html
+  - pages/404.html
+  - pages/index.md
+
+### Author Info ###
+author:
+  name              : Sylvia Zhou
+  image             : https://media.tenor.com/8RcIoWTKYR4AAAAe/scuze-corgi.png
+  email             : xiwen3@illinois.edu
+  github            : 
+  linkedin          : sylviazhou0508
+  twitter           : 
+
+### Posts ###
+permalink: /blog/:title
+
+### Collections ###
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name
+
+### Disqus ###
+disqus:
+  shortname: 
+
+### Analytics ###
+analytics:
+  enabled: false
+
+### Defaults for collections ###
+defaults:
+  - scope:
+      path: ""
+      type: "projects"
+    values:
+      layout: "page"
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      comments: false
+
+exclude:
+  - README.md
+  - LICENSE.md
+  - package.json
+  - package-lock.json
+  - node_modules
+  - src
+  - tailwind.config.js
+  - tsconfig.json
+  - next-env.d.ts

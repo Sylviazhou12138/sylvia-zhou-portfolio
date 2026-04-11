@@ -1,0 +1,10 @@
+- name: Python
+  percentage: 90
+- name: SQL
+  percentage: 85
+- name: JavaScript
+  percentage: 80
+- name: R
+  percentage: 75
+- name: HTML/CSS
+  percentage: 90
