@@ -36,7 +36,7 @@ export function AboutSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold">About</h2>
+          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold" style={{ fontFamily: 'var(--font-display)' }}>About</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             I build AI systems that ship.
           </p>
@@ -72,11 +72,11 @@ export function AboutSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="p-6 hover:shadow-xl transition-all border-2 hover:border-blue-200 rounded-2xl h-full">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mb-4 shadow-md">
-                  <value.icon className="w-6 h-6 text-white" />
+              <Card className="p-6 hover:shadow-xl transition-all border-2 hover:border-[rgba(92,84,138,0.3)] rounded-2xl h-full">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ background: 'rgba(92,84,138,0.1)' }}>
+                  <value.icon className="w-6 h-6" style={{ color: '#5C548A' }} />
                 </div>
-                <h4 className="text-xl mb-2 text-gray-900 font-bold">{value.title}</h4>
+                <h4 className="text-xl mb-2 text-gray-900 font-bold" style={{ fontFamily: 'var(--font-display)' }}>{value.title}</h4>
                 <p className="text-gray-600 leading-relaxed">{value.description}</p>
               </Card>
             </motion.div>

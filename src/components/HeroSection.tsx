@@ -1,9 +1,41 @@
+import { useRef } from 'react';
 import { ArrowRight, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from './ui/button';
-import { motion } from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion } from 'motion/react';
 import profileImage from '../assets/profile_new.png';
 
 export function HeroSection() {
+  const prefersReducedMotion = useReducedMotion();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const rawX = useMotionValue(0.5);
+  const rawY = useMotionValue(0.5);
+
+  const rotateX = useSpring(useTransform(rawY, [0, 1], [10, -10]), {
+    stiffness: 150,
+    damping: 18,
+  });
+  const rotateY = useSpring(useTransform(rawX, [0, 1], [-12, 12]), {
+    stiffness: 150,
+    damping: 18,
+  });
+
+  const glossX = useTransform(rawX, [0, 1], [10, 90]);
+  const glossY = useTransform(rawY, [0, 1], [10, 90]);
+  const glossBg = useMotionTemplate`radial-gradient(circle at ${glossX}% ${glossY}%, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 65%)`;
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion || !cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    rawX.set((e.clientX - rect.left) / rect.width);
+    rawY.set((e.clientY - rect.top) / rect.height);
+  };
+
+  const handleMouseLeave = () => {
+    rawX.set(0.5);
+    rawY.set(0.5);
+  };
+
   const scrollToContact = () => {
     const element = document.querySelector('#contact');
     if (element) {
@@ -17,7 +49,7 @@ export function HeroSection() {
       className="min-h-screen w-full flex items-center justify-center relative overflow-hidden pt-20"
       style={{ background: '#FDFCFB' }}
     >
-      {/* 艺术背景层 */}
+      {/* Decorative background text */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div
           className="hidden xl:block font-black select-none leading-none"
@@ -34,56 +66,80 @@ export function HeroSection() {
           SYLVIA
         </div>
       </div>
-      
+
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 lg:gap-20 md:gap-8">
-          
-          {/* 左侧：照片区域 */}
+
+          {/* Left: Photo with 3D tilt */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
             className="relative w-full flex justify-center md:justify-start overflow-visible"
           >
-            <div className="relative" style={{ width: '340px', height: '453px', maxWidth: '80vw' }}>
-              {/* 背卡：轻微偏移，形成卡片层次 */}
-              <div
-                className="absolute z-0"
+            <div
+              ref={cardRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={{ width: '340px', height: '453px', maxWidth: '80vw', perspective: '1000px' }}
+            >
+              <motion.div
+                className="relative w-full h-full"
                 style={{
-                  inset: '0',
-                  borderRadius: '32px',
-                  background: 'linear-gradient(145deg, #6B62A0 0%, #544B86 100%)',
-                  transform: 'translate(14px, 14px) rotate(-4deg)',
-                  boxShadow: '0 18px 40px rgba(84,75,134,0.28)',
-                }}
-              />
-
-              {/* 主卡：照片本体 */}
-              <div
-                className="absolute inset-0 z-10 overflow-hidden bg-white"
-                style={{
-                  borderRadius: '30px',
-                  border: '1px solid rgba(255,255,255,0.9)',
-                  boxShadow: '0 22px 48px rgba(17, 24, 39, 0.16)',
+                  rotateX: prefersReducedMotion ? 0 : rotateX,
+                  rotateY: prefersReducedMotion ? 0 : rotateY,
+                  transformStyle: 'preserve-3d',
                 }}
               >
-                <img
-                  src={profileImage}
-                  alt="Sylvia Zhou"
-                  className="w-full h-full object-cover object-center block"
-                />
+                {/* Background offset card */}
                 <div
-                  className="absolute inset-0"
+                  className="absolute z-0"
                   style={{
-                    background:
-                      'linear-gradient(to top, rgba(15,23,42,0.18) 0%, rgba(15,23,42,0.02) 40%, rgba(15,23,42,0) 65%)',
+                    inset: '0',
+                    borderRadius: '32px',
+                    background: 'linear-gradient(145deg, #6B62A0 0%, #544B86 100%)',
+                    transform: 'translate(14px, 14px) rotate(-4deg)',
+                    boxShadow: '0 18px 40px rgba(84,75,134,0.28)',
                   }}
                 />
-              </div>
+
+                {/* Main photo card */}
+                <div
+                  className="absolute inset-0 z-10 overflow-hidden bg-white"
+                  style={{
+                    borderRadius: '30px',
+                    border: '1px solid rgba(255,255,255,0.9)',
+                    boxShadow: '0 22px 48px rgba(17, 24, 39, 0.16)',
+                  }}
+                >
+                  <img
+                    src={profileImage}
+                    alt="Sylvia Zhou"
+                    className="w-full h-full object-cover object-center block"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        'linear-gradient(to top, rgba(15,23,42,0.18) 0%, rgba(15,23,42,0.02) 40%, rgba(15,23,42,0) 65%)',
+                    }}
+                  />
+
+                  {/* Specular gloss highlight */}
+                  <motion.div
+                    className="absolute inset-0 z-20 pointer-events-none"
+                    style={{
+                      borderRadius: '30px',
+                      background: glossBg,
+                      opacity: prefersReducedMotion ? 0 : 1,
+                    }}
+                  />
+                </div>
+              </motion.div>
             </div>
           </motion.div>
 
-          {/* 右侧：文字内容 */}
+          {/* Right: Text content */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -93,20 +149,25 @@ export function HeroSection() {
           >
             <div className="space-y-6 lg:space-y-8">
               <div className="space-y-3">
-                <p className="text-lg font-bold uppercase" style={{ color: '#5C548A', letterSpacing: '0.2em' }}>
-                  Introduction
+                <p className="text-sm font-bold uppercase tracking-[0.2em]" style={{ color: '#5C548A' }}>
+                  AI Solutions Engineer
                 </p>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tighter" style={{ color: '#1A1A1A' }}>
+                <h1
+                  className="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tighter"
+                  style={{ color: '#1A1A1A', fontFamily: 'var(--font-display)' }}
+                >
                   SYLVIA <br />
                   <span className="relative inline-block mt-2">
                     ZHOU
-                    <span className="absolute h-3 -z-10" style={{ bottom: '4px', left: 0, width: '110%', background: 'rgba(244,255,129,0.6)' }} />
+                    <span
+                      className="absolute h-3 -z-10"
+                      style={{ bottom: '4px', left: 0, width: '110%', background: 'rgba(244,255,129,0.6)' }}
+                    />
                   </span>
                 </h1>
               </div>
 
               <div className="space-y-6 max-w-lg">
-                {/* Keyword line */}
                 <p className="text-base font-bold tracking-widest uppercase" style={{ color: '#5C548A', letterSpacing: '0.15em' }}>
                   AI Solutions
                   <span className="mx-3 font-light opacity-40">·</span>
@@ -115,36 +176,42 @@ export function HeroSection() {
                   End-to-End
                 </p>
 
-                {/* Manifesto quote */}
-                <div
-                  className="rounded-2xl px-5 py-4"
-                  style={{ background: 'rgba(92,84,138,0.07)' }}
-                >
-                  <p
-                    className="text-lg sm:text-xl font-medium leading-relaxed italic"
-                    style={{ color: '#3A3A3A' }}
+                <div className="space-y-1">
+                  <span
+                    className="block select-none"
+                    style={{
+                      fontFamily: 'Georgia, serif',
+                      fontSize: '4.5rem',
+                      color: '#5C548A',
+                      opacity: 0.3,
+                      lineHeight: 0.75,
+                    }}
                   >
-                    <span style={{ fontSize: '1.6em', color: '#5C548A', lineHeight: 0, verticalAlign: '-0.25em', fontStyle: 'normal' }}>&ldquo;</span>
+                    &ldquo;
+                  </span>
+                  <p
+                    className="text-xl sm:text-2xl font-semibold leading-snug"
+                    style={{ color: '#1A1A1A', fontFamily: 'var(--font-display)' }}
+                  >
                     I turn vague client needs into AI systems that actually ship.
-                    <span style={{ fontSize: '1.6em', color: '#5C548A', lineHeight: 0, verticalAlign: '-0.25em', fontStyle: 'normal' }}>&rdquo;</span>
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-6 pt-2">
-                <Button 
-                  size="lg" 
-                  onClick={scrollToContact} 
+                <Button
+                  size="lg"
+                  onClick={scrollToContact}
                   className="text-white px-8 py-6 text-lg rounded-xl shadow-lg transition-all"
                   style={{ background: '#5C548A' }}
                 >
                   Let's Talk
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-                
+
                 <div className="flex items-center gap-5">
                   {[
-                    { icon: Github, href: 'https://github.com' },
+                    { icon: Github, href: 'https://github.com/Sylviazhou12138' },
                     { icon: Linkedin, href: 'https://linkedin.com/in/sylviazhou0508' },
                     { icon: Mail, href: 'mailto:sylviazhou12138@gmail.com' },
                   ].map((social, index) => (
@@ -153,7 +220,7 @@ export function HeroSection() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-400 transition-all transform hover:scale-110"
+                      className="transition-all transform hover:scale-110"
                       style={{ color: '#9CA3AF' }}
                     >
                       <social.icon className="w-6 h-6" />

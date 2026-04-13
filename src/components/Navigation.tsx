@@ -48,7 +48,7 @@ export function Navigation() {
             className="flex-shrink-0"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="text-2xl font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="text-2xl font-semibold" style={{ color: '#5C548A', fontFamily: 'var(--font-display)' }}>
               Sylvia Zhou
             </span>
           </motion.div>
@@ -62,11 +62,11 @@ export function Navigation() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -2 }}
                   onClick={() => scrollToSection(item.href)}
-                  className="text-gray-700 hover:text-blue-600 transition-colors relative group"
+                  className="nav-item"
                 >
                   {item.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
                 </motion.button>
               ))}
             </div>
@@ -100,7 +100,7 @@ export function Navigation() {
                 <button
                   key={item.href}
                   onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-md transition-colors"
+                  className="block w-full text-left px-3 py-2 text-gray-700 hover:bg-[rgba(92,84,138,0.08)] hover:text-[#5C548A] rounded-md transition-colors"
                 >
                   {item.label}
                 </button>

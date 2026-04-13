@@ -1,7 +1,8 @@
+import { useRef } from 'react';
 import { Card } from './ui/card';
 import { Badge } from './ui/badge';
 import { ExternalLink } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react';
 
 const projects = [
   {
@@ -27,12 +28,60 @@ const projects = [
   },
   {
     title: 'WonderWords – YouTube Vocab Assistant',
-    description: 'Shipped a Gemini-based Chrome extension that scans YouTube videos for vocabulary and tailors word lists by the user\'s English proficiency level. End-to-end product from prompt design to Chrome Web Store submission.',
+    description: "Shipped a Gemini-based Chrome extension that scans YouTube videos for vocabulary and tailors word lists by the user's English proficiency level. End-to-end product from prompt design to Chrome Web Store submission.",
     tags: ['Gemini API', 'Chrome Extension', 'JavaScript', 'EdTech'],
     link: 'https://github.com/Sylviazhou12138/WonderWords',
     period: '2024',
   },
 ];
+
+function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  const rawX = useMotionValue(0.5);
+  const rawY = useMotionValue(0.5);
+
+  const rotateX = useSpring(useTransform(rawY, [0, 1], [5, -5]), { stiffness: 200, damping: 25 });
+  const rotateY = useSpring(useTransform(rawX, [0, 1], [-6, 6]), { stiffness: 200, damping: 25 });
+  const scale = useSpring(1, { stiffness: 300, damping: 25 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion || !ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    rawX.set((e.clientX - rect.left) / rect.width);
+    rawY.set((e.clientY - rect.top) / rect.height);
+  };
+
+  const handleMouseEnter = () => {
+    if (!prefersReducedMotion) scale.set(1.02);
+  };
+
+  const handleMouseLeave = () => {
+    rawX.set(0.5);
+    rawY.set(0.5);
+    scale.set(1);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX: prefersReducedMotion ? 0 : rotateX,
+        rotateY: prefersReducedMotion ? 0 : rotateY,
+        scale: prefersReducedMotion ? 1 : scale,
+        transformStyle: 'preserve-3d',
+        perspective: '800px',
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
 
 export function ProjectsSection() {
   return (
@@ -44,7 +93,7 @@ export function ProjectsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold">Projects</h2>
+          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold" style={{ fontFamily: 'var(--font-display)' }}>Projects</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             From Architecture to Production, End to End.
           </p>
@@ -58,43 +107,49 @@ export function ProjectsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
+              className="h-full"
             >
-              <a
-                href={project.link ?? undefined}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={project.link ? 'cursor-pointer' : 'cursor-default'}
-                onClick={e => !project.link && e.preventDefault()}
-              >
-                <Card className="overflow-hidden group hover:shadow-xl transition-all border border-gray-100 h-full flex flex-col rounded-2xl">
-                  <div className="p-8 flex-1 flex flex-col">
-                    <h3 className="text-xl mb-3 text-gray-900 font-bold group-hover:text-[#5C548A] transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-500 mb-5 flex-1 leading-relaxed text-sm">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="outline"
-                          className="text-xs font-medium"
-                          style={{ borderColor: 'rgba(92,84,138,0.2)', color: '#5C548A' }}
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                    {project.link && (
-                      <div className="flex items-center gap-1 mt-auto text-sm font-medium" style={{ color: '#5C548A' }}>
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        View Project
+              <TiltCard className="h-full">
+                <a
+                  href={project.link ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={project.link ? 'cursor-pointer block h-full' : 'cursor-default block h-full'}
+                  onClick={e => !project.link && e.preventDefault()}
+                >
+                  <Card className="overflow-hidden group border border-gray-100 h-full flex flex-col rounded-2xl transition-shadow duration-300 hover:shadow-xl">
+                    <div className="p-8 flex-1 flex flex-col">
+                      <h3
+                        className="text-xl mb-3 text-gray-900 font-bold group-hover:text-[#5C548A] transition-colors"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-500 mb-5 flex-1 leading-relaxed text-sm">
+                        {project.description}
+                      </p>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant="outline"
+                            className="text-xs font-medium"
+                            style={{ borderColor: 'rgba(92,84,138,0.2)', color: '#5C548A' }}
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
                       </div>
-                    )}
-                  </div>
-                </Card>
-              </a>
+                      {project.link && (
+                        <div className="flex items-center gap-1 mt-auto text-sm font-medium" style={{ color: '#5C548A' }}>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          View Project
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </a>
+              </TiltCard>
             </motion.div>
           ))}
         </div>

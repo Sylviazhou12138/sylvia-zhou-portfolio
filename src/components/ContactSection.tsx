@@ -5,7 +5,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Mail, MapPin, MessageSquare, Send, Linkedin } from 'lucide-react';
-import { toast } from 'sonner';
 import { motion } from 'motion/react';
 
 const contactInfo = [
@@ -38,10 +37,9 @@ export function ContactSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success('Message sent!', {
-      description: 'Thanks for reaching out — I\'ll get back to you soon.',
-    });
-    setFormData({ name: '', email: '', message: '' });
+    const subject = encodeURIComponent(`Message from ${formData.name}`);
+    const body = encodeURIComponent(`From: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`);
+    window.location.href = `mailto:sylviazhou12138@gmail.com?subject=${subject}&body=${body}`;
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,7 +50,7 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-b from-white to-blue-50">
+    <section id="contact" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -60,7 +58,7 @@ export function ContactSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold">Contact</h2>
+          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold" style={{ fontFamily: 'var(--font-display)' }}>Contact</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Open to AI engineering, forward deployed, and consulting roles.
           </p>
@@ -75,9 +73,9 @@ export function ContactSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="p-6 text-center hover:shadow-lg transition-all border-2 hover:border-blue-100 rounded-2xl h-full">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-md">
-                  <info.icon className="w-6 h-6 text-white" />
+              <Card className="p-6 text-center hover:shadow-lg transition-all border-2 hover:border-[rgba(92,84,138,0.3)] rounded-2xl h-full">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ background: 'rgba(92,84,138,0.1)' }}>
+                  <info.icon className="w-6 h-6" style={{ color: '#5C548A' }} />
                 </div>
                 <h3 className="text-xl mb-2 text-gray-900 font-bold">{info.title}</h3>
                 {info.link ? (
@@ -85,7 +83,7 @@ export function ContactSection() {
                     href={info.link}
                     target={info.link.startsWith('http') ? '_blank' : undefined}
                     rel={info.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="text-blue-600 hover:text-blue-700 transition-colors break-all font-medium"
+                    className="hover:opacity-80 transition-opacity break-all font-medium" style={{ color: '#5C548A' }}
                   >
                     {info.value}
                   </a>
@@ -108,7 +106,7 @@ export function ContactSection() {
         >
           <Card className="max-w-2xl mx-auto p-8 border-2 rounded-2xl shadow-sm">
             <h3 className="text-2xl mb-6 text-center text-gray-900 font-bold flex items-center justify-center gap-2">
-              <MessageSquare className="w-6 h-6 text-blue-600" />
+              <MessageSquare className="w-6 h-6" style={{ color: '#5C548A' }} />
               Send a Message
             </h3>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -122,7 +120,7 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="Your name"
                     required
-                    className="border-gray-200 focus:border-blue-500 rounded-xl"
+                    className="border-gray-200 focus:border-[#5C548A] rounded-xl"
                   />
                 </div>
                 <div className="space-y-2">
@@ -135,7 +133,7 @@ export function ContactSection() {
                     onChange={handleChange}
                     placeholder="your@email.com"
                     required
-                    className="border-gray-200 focus:border-blue-500 rounded-xl"
+                    className="border-gray-200 focus:border-[#5C548A] rounded-xl"
                   />
                 </div>
               </div>
@@ -155,7 +153,10 @@ export function ContactSection() {
               <Button 
                 type="submit" 
                 size="lg" 
-                className="w-full bg-blue-600 hover:bg-blue-700 shadow-lg py-6 text-lg rounded-xl font-bold"
+                className="w-full shadow-lg py-6 text-lg rounded-xl font-bold text-white"
+              style={{ background: '#5C548A' }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#4A4270')}
+              onMouseLeave={e => (e.currentTarget.style.background = '#5C548A')}
               >
                 <Send className="w-4 h-4 mr-2" />
                 Send Message

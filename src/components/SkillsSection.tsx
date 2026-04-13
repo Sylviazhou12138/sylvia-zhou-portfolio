@@ -47,7 +47,7 @@ export function SkillsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold">Skills</h2>
+          <h2 className="text-4xl sm:text-5xl mb-4 text-gray-900 font-bold" style={{ fontFamily: 'var(--font-display)' }}>Skills</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">What I work with</p>
         </motion.div>
 

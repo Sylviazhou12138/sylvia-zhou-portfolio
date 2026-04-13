@@ -184,6 +184,31 @@ html {
   font-size: var(--font-size);
 }
 
+/* Navigation hover */
+.nav-item {
+  color: #6B7280;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.2s ease;
+}
+.nav-item:hover {
+  color: #5C548A;
+}
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  border-radius: 9999px;
+  background: #5C548A;
+  transition: width 0.3s ease-out;
+}
+.nav-item:hover::after {
+  width: 100%;
+}
+
 /* Custom animations */
 @keyframes spin-slow {
   to {

@@ -1,8 +1,8 @@
-import { Github, Linkedin, Mail, Heart } from 'lucide-react';
+import { Github, Linkedin, Mail } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com', label: 'GitHub' },
+  { icon: Github, href: 'https://github.com/Sylviazhou12138', label: 'GitHub' },
   { icon: Linkedin, href: 'https://linkedin.com/in/sylviazhou0508', label: 'LinkedIn' },
   { icon: Mail, href: 'mailto:sylviazhou12138@gmail.com', label: 'Email' },
 ];
@@ -18,7 +18,7 @@ export function Footer() {
             className="text-3xl font-semibold mb-4"
             whileHover={{ scale: 1.05 }}
           >
-            <span className="bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">
+            <span className="text-white" style={{ fontFamily: 'var(--font-display)' }}>
               Sylvia Zhou
             </span>
           </motion.div>
@@ -38,7 +38,7 @@ export function Footer() {
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.15, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                className="text-gray-400 hover:text-blue-400 transition-colors"
+                className="text-gray-400 hover:text-purple-300 transition-colors"
                 aria-label={link.label}
               >
                 <link.icon className="w-6 h-6" />
@@ -47,11 +47,8 @@ export function Footer() {
           </div>
           
           <div className="border-t border-gray-800 w-full pt-8 text-center">
-            <p className="text-gray-400 flex items-center justify-center gap-2 flex-wrap">
-              <span>© {currentYear} Sylvia Zhou.</span>
-              <span className="flex items-center gap-1">
-                Made with <Heart className="w-4 h-4 text-red-400" /> and passion
-              </span>
+            <p className="text-gray-400">
+              © {currentYear} Sylvia Zhou
             </p>
           </div>
         </div>
