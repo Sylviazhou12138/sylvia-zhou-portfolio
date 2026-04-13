@@ -149,9 +149,6 @@ export function HeroSection() {
           >
             <div className="space-y-6 lg:space-y-8">
               <div className="space-y-3">
-                <p className="text-sm font-bold uppercase tracking-[0.2em]" style={{ color: '#5C548A' }}>
-                  AI Solutions Engineer
-                </p>
                 <h1
                   className="text-5xl sm:text-6xl lg:text-7xl font-black leading-none tracking-tighter"
                   style={{ color: '#1A1A1A', fontFamily: 'var(--font-display)' }}
@@ -168,13 +165,32 @@ export function HeroSection() {
               </div>
 
               <div className="space-y-6 max-w-lg">
-                <p className="text-base font-bold tracking-widest uppercase" style={{ color: '#5C548A', letterSpacing: '0.15em' }}>
-                  AI Solutions
-                  <span className="mx-3 font-light opacity-40">·</span>
-                  Client-Facing
-                  <span className="mx-3 font-light opacity-40">·</span>
-                  End-to-End
-                </p>
+                <div className="flex flex-wrap items-center gap-x-0 gap-y-1">
+                  {['AI Solutions', 'Client-Facing', 'End-to-End'].map((tag, i) => (
+                    <motion.span
+                      key={tag}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: 0.6 + i * 0.12, ease: 'easeOut' }}
+                      className="flex items-center"
+                    >
+                      <span className="text-base font-bold tracking-widest uppercase" style={{ color: '#5C548A', letterSpacing: '0.15em' }}>
+                        {tag}
+                      </span>
+                      {i < 2 && (
+                        <motion.span
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 0.4 }}
+                          transition={{ duration: 0.3, delay: 0.72 + i * 0.12 }}
+                          className="mx-3 font-light"
+                          style={{ color: '#5C548A' }}
+                        >
+                          ·
+                        </motion.span>
+                      )}
+                    </motion.span>
+                  ))}
+                </div>
 
                 <div className="space-y-1">
                   <span
